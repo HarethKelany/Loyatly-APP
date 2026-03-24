@@ -86,7 +86,7 @@ const Index = () => {
           <p className="text-muted-foreground max-w-md mx-auto">
             Print this QR code and place it at the counter — customers scan it to sign up instantly.
           </p>
-          <Card className="inline-block border-0 shadow-lg bg-background p-2">
+          <Card className="inline-block border-0 shadow-lg bg-background p-2 qr-print-area">
             <CardContent className="p-6">
               <QRCodeSVG
                 value={`${window.location.origin}/join`}
