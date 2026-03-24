@@ -78,6 +78,55 @@ const Index = () => {
           ))}
         </div>
       </div>
+
+      {/* QR Code Section */}
+      <div className="surface-warm py-16">
+        <div className="container mx-auto px-4 text-center space-y-6">
+          <h2 className="text-3xl font-serif text-foreground">Scan to Join</h2>
+          <p className="text-muted-foreground max-w-md mx-auto">
+            Print this QR code and place it at the counter — customers scan it to sign up instantly.
+          </p>
+          <Card className="inline-block border-0 shadow-lg bg-background p-2">
+            <CardContent className="p-6">
+              <QRCodeSVG
+                value={`${window.location.origin}/join`}
+                size={200}
+                bgColor="hsl(35, 30%, 97%)"
+                fgColor="hsl(25, 20%, 12%)"
+                level="M"
+                includeMargin={false}
+              />
+              <p className="mt-4 text-sm font-medium text-foreground font-serif">BAKEBAR LOYALTY</p>
+              <p className="text-xs text-muted-foreground">Scan to get your free loyalty card</p>
+            </CardContent>
+          </Card>
+          <div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const svg = document.querySelector('.qr-print-area svg');
+                if (!svg) return;
+                const svgData = new XMLSerializer().serializeToString(svg);
+                const canvas = document.createElement('canvas');
+                canvas.width = 600; canvas.height = 600;
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                img.onload = () => {
+                  ctx?.drawImage(img, 0, 0, 600, 600);
+                  const a = document.createElement('a');
+                  a.download = 'bakebar-qr.png';
+                  a.href = canvas.toDataURL('image/png');
+                  a.click();
+                };
+                img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
+              }}
+            >
+              <Download className="w-4 h-4 mr-1" /> Download QR Code
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
