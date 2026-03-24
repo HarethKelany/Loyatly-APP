@@ -14,16 +14,263 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      customers: {
+        Row: {
+          code: string
+          created_at: string
+          email: string
+          id: string
+          name: string
+          phone: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          phone: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          phone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      passes: {
+        Row: {
+          created_at: string
+          customer_id: string
+          id: string
+          is_reward_ready: boolean
+          push_token: string | null
+          serial_number: string
+          stamp_count: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_id: string
+          id?: string
+          is_reward_ready?: boolean
+          push_token?: string | null
+          serial_number: string
+          stamp_count?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string
+          id?: string
+          is_reward_ready?: boolean
+          push_token?: string | null
+          serial_number?: string
+          stamp_count?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "passes_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: true
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reward_configs: {
+        Row: {
+          active_from: string
+          active_until: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean
+          item_image_url: string | null
+          item_name: string
+          updated_at: string
+        }
+        Insert: {
+          active_from?: string
+          active_until?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          item_image_url?: string | null
+          item_name: string
+          updated_at?: string
+        }
+        Update: {
+          active_from?: string
+          active_until?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          item_image_url?: string | null
+          item_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      rewards: {
+        Row: {
+          customer_id: string
+          id: string
+          item_name: string
+          redeemed_at: string
+          redeemed_by: string
+          reward_config_id: string
+        }
+        Insert: {
+          customer_id: string
+          id?: string
+          item_name: string
+          redeemed_at?: string
+          redeemed_by: string
+          reward_config_id: string
+        }
+        Update: {
+          customer_id?: string
+          id?: string
+          item_name?: string
+          redeemed_at?: string
+          redeemed_by?: string
+          reward_config_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rewards_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rewards_reward_config_id_fkey"
+            columns: ["reward_config_id"]
+            isOneToOne: false
+            referencedRelation: "reward_configs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      staff_users: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          is_active: boolean
+          name: string
+          password_hash: string
+          role: Database["public"]["Enums"]["staff_role"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          is_active?: boolean
+          name: string
+          password_hash: string
+          role?: Database["public"]["Enums"]["staff_role"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          password_hash?: string
+          role?: Database["public"]["Enums"]["staff_role"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      visits: {
+        Row: {
+          created_at: string
+          customer_id: string
+          id: string
+          logged_by: string | null
+          method: Database["public"]["Enums"]["visit_method"]
+        }
+        Insert: {
+          created_at?: string
+          customer_id: string
+          id?: string
+          logged_by?: string | null
+          method?: Database["public"]["Enums"]["visit_method"]
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string
+          id?: string
+          logged_by?: string | null
+          method?: Database["public"]["Enums"]["visit_method"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visits_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      webhook_logs: {
+        Row: {
+          customer_id: string | null
+          error: string | null
+          event_type: string
+          id: string
+          payload: Json
+          processed: boolean
+          received_at: string
+          source: string
+        }
+        Insert: {
+          customer_id?: string | null
+          error?: string | null
+          event_type: string
+          id?: string
+          payload?: Json
+          processed?: boolean
+          received_at?: string
+          source: string
+        }
+        Update: {
+          customer_id?: string | null
+          error?: string | null
+          event_type?: string
+          id?: string
+          payload?: Json
+          processed?: boolean
+          received_at?: string
+          source?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_customer_code: { Args: never; Returns: string }
     }
     Enums: {
-      [_ in never]: never
+      staff_role: "STAFF" | "ADMIN"
+      visit_method: "AUTO" | "MANUAL"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +397,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      staff_role: ["STAFF", "ADMIN"],
+      visit_method: ["AUTO", "MANUAL"],
+    },
   },
 } as const
