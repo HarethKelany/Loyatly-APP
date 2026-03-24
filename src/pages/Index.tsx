@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Coffee, ArrowRight, Users, Gift, Smartphone } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Coffee, ArrowRight, Users, Gift, Smartphone, Download } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import LoyaltyCard from "@/components/LoyaltyCard";
 
 const Index = () => {
