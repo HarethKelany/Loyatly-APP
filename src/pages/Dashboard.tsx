@@ -133,6 +133,9 @@ const Dashboard = () => {
             >
               <Gift className="w-4 h-4 mr-1" /> Rewards
             </Button>
+            <Button variant="ghost" size="sm" onClick={signOut}>
+              <LogOut className="w-4 h-4 mr-1" /> Sign Out
+            </Button>
           </div>
         </div>
       </header>
