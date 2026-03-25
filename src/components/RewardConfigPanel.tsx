@@ -9,9 +9,11 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Gift, Plus, Check } from "lucide-react";
 import { format } from "date-fns";
+import { useAuth } from "@/hooks/useAuth";
 
 const RewardConfigPanel = () => {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [newItemName, setNewItemName] = useState("");
   const [showForm, setShowForm] = useState(false);
 
@@ -40,7 +42,7 @@ const RewardConfigPanel = () => {
         item_name: itemName,
         is_active: true,
         active_from: new Date().toISOString(),
-        created_by: "admin",
+        created_by: user?.email || "admin",
       });
       if (error) throw error;
     },
