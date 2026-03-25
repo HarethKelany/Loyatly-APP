@@ -9,13 +9,15 @@ import { toast } from "sonner";
 import StampProgress from "@/components/StampProgress";
 import CustomerProfile from "@/components/CustomerProfile";
 import RewardConfigPanel from "@/components/RewardConfigPanel";
-import { Search, Users, Gift, TrendingUp, Coffee } from "lucide-react";
+import { Search, Users, Gift, TrendingUp, Coffee, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const Dashboard = () => {
   const [search, setSearch] = useState("");
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"customers" | "rewards">("customers");
   const queryClient = useQueryClient();
+  const { signOut } = useAuth();
 
   const { data: customers, isLoading } = useQuery({
     queryKey: ["customers", search],
@@ -130,6 +132,9 @@ const Dashboard = () => {
               onClick={() => setActiveTab("rewards")}
             >
               <Gift className="w-4 h-4 mr-1" /> Rewards
+            </Button>
+            <Button variant="ghost" size="sm" onClick={signOut}>
+              <LogOut className="w-4 h-4 mr-1" /> Sign Out
             </Button>
           </div>
         </div>
