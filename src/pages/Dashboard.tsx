@@ -17,7 +17,8 @@ const Dashboard = () => {
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"customers" | "rewards">("customers");
   const queryClient = useQueryClient();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
+  const staffEmail = user?.email || "staff";
 
   const { data: customers, isLoading } = useQuery({
     queryKey: ["customers", search],
@@ -59,7 +60,7 @@ const Dashboard = () => {
       const { error: visitError } = await supabase.from("visits").insert({
         customer_id: customerId,
         method: "MANUAL" as const,
-        logged_by: "staff",
+        logged_by: staffEmail,
       });
       if (visitError) throw visitError;
 
@@ -118,7 +119,7 @@ const Dashboard = () => {
               <p className="text-xs text-muted-foreground">Staff Dashboard</p>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <Button
               variant={activeTab === "customers" ? "default" : "outline"}
               size="sm"
@@ -133,6 +134,7 @@ const Dashboard = () => {
             >
               <Gift className="w-4 h-4 mr-1" /> Rewards
             </Button>
+            <span className="text-xs text-muted-foreground hidden sm:inline">{user?.email}</span>
             <Button variant="ghost" size="sm" onClick={signOut}>
               <LogOut className="w-4 h-4 mr-1" /> Sign Out
             </Button>

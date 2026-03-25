@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import LoyaltyCard from "./LoyaltyCard";
 import { ArrowLeft, Coffee, Gift, Clock, Mail, Phone } from "lucide-react";
 import { format } from "date-fns";
+import { useAuth } from "@/hooks/useAuth";
 
 interface CustomerProfileProps {
   customerId: string;
@@ -15,6 +16,8 @@ interface CustomerProfileProps {
 
 const CustomerProfile = ({ customerId, onBack }: CustomerProfileProps) => {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+  const staffEmail = user?.email || "staff";
 
   const { data: customer } = useQuery({
     queryKey: ["customer", customerId],
@@ -77,7 +80,7 @@ const CustomerProfile = ({ customerId, onBack }: CustomerProfileProps) => {
         customer_id: customerId,
         item_name: activeReward.item_name,
         reward_config_id: activeReward.id,
-        redeemed_by: "staff",
+        redeemed_by: staffEmail,
       });
       if (rewardError) throw rewardError;
 
@@ -103,7 +106,7 @@ const CustomerProfile = ({ customerId, onBack }: CustomerProfileProps) => {
       const { error: visitError } = await supabase.from("visits").insert({
         customer_id: customerId,
         method: "MANUAL" as const,
-        logged_by: "staff",
+        logged_by: staffEmail,
       });
       if (visitError) throw visitError;
 
