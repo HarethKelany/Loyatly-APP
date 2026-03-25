@@ -9,7 +9,8 @@ import { toast } from "sonner";
 import StampProgress from "@/components/StampProgress";
 import CustomerProfile from "@/components/CustomerProfile";
 import RewardConfigPanel from "@/components/RewardConfigPanel";
-import { Search, Users, Gift, TrendingUp, Coffee } from "lucide-react";
+import { Search, Users, Gift, TrendingUp, Coffee, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const Dashboard = () => {
   const [search, setSearch] = useState("");
