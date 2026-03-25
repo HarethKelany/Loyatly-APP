@@ -17,6 +17,7 @@ const Dashboard = () => {
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"customers" | "rewards">("customers");
   const queryClient = useQueryClient();
+  const { signOut } = useAuth();
 
   const { data: customers, isLoading } = useQuery({
     queryKey: ["customers", search],
