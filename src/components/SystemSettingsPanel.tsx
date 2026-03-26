@@ -168,6 +168,9 @@ const SystemSettingsPanel = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Admin Customization */}
+      <AdminCustomizationSection />
     </div>
   );
 };
