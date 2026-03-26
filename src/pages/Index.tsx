@@ -17,8 +17,14 @@ const Index = () => {
               <Coffee className="w-10 h-10" />
             </div>
             <h1 className="text-5xl md:text-6xl font-serif text-foreground">BAKEBAR</h1>
-            <p className="text-xl text-muted-foreground max-w-lg mx-auto">
-              Earn a free treat every 7 visits. No app needed — your loyalty card lives in Apple Wallet.
+            <p className="text-lg text-muted-foreground max-w-lg mx-auto leading-relaxed">
+              A breakfast and brunch café in Cairo. We keep things simple — a focused menu, quality ingredients, and a space designed to make your morning feel like it matters.
+            </p>
+            <p className="text-base text-muted-foreground/80 max-w-md mx-auto">
+              No noise, no gimmicks. Just well-made food and the kind of atmosphere that makes you want to slow down for an hour.
+            </p>
+            <p className="text-sm font-serif text-primary italic">
+              Come for the coffee. Stay for the bakes.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link to="/join">
