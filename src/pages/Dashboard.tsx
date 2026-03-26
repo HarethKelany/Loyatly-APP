@@ -3,19 +3,24 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import StampProgress from "@/components/StampProgress";
 import CustomerProfile from "@/components/CustomerProfile";
 import RewardConfigPanel from "@/components/RewardConfigPanel";
-import { Search, Users, Gift, TrendingUp, Coffee, LogOut } from "lucide-react";
+import AnalyticsPanel from "@/components/AnalyticsPanel";
+import CustomerManagementPanel from "@/components/CustomerManagementPanel";
+import SystemSettingsPanel from "@/components/SystemSettingsPanel";
+import { Search, Users, Gift, Coffee, LogOut, BarChart3, Settings, UserCog } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+
+type TabId = "customers" | "rewards" | "analytics" | "manage" | "settings";
 
 const Dashboard = () => {
   const [search, setSearch] = useState("");
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"customers" | "rewards">("customers");
+  const [activeTab, setActiveTab] = useState<TabId>("customers");
   const queryClient = useQueryClient();
   const { signOut, user } = useAuth();
   const staffEmail = user?.email || "staff";
@@ -27,36 +32,17 @@ const Dashboard = () => {
         .from("customers")
         .select("*, passes(*)")
         .order("created_at", { ascending: false });
-
       if (search) {
         query = query.or(`code.ilike.%${search}%,name.ilike.%${search}%,phone.ilike.%${search}%,email.ilike.%${search}%`);
       }
-
       const { data, error } = await query.limit(50);
       if (error) throw error;
       return data;
     },
   });
 
-  const { data: stats } = useQuery({
-    queryKey: ["dashboard-stats"],
-    queryFn: async () => {
-      const [customersRes, visitsRes, rewardsRes] = await Promise.all([
-        supabase.from("customers").select("id", { count: "exact", head: true }),
-        supabase.from("visits").select("id", { count: "exact", head: true }),
-        supabase.from("rewards").select("id", { count: "exact", head: true }),
-      ]);
-      return {
-        totalCustomers: customersRes.count || 0,
-        totalVisits: visitsRes.count || 0,
-        totalRedemptions: rewardsRes.count || 0,
-      };
-    },
-  });
-
   const logVisitMutation = useMutation({
     mutationFn: async (customerId: string) => {
-      // Create visit
       const { error: visitError } = await supabase.from("visits").insert({
         customer_id: customerId,
         method: "MANUAL" as const,
@@ -64,7 +50,6 @@ const Dashboard = () => {
       });
       if (visitError) throw visitError;
 
-      // Get current pass
       const { data: pass, error: passError } = await supabase
         .from("passes")
         .select("*")
@@ -75,7 +60,6 @@ const Dashboard = () => {
       const newCount = pass.stamp_count + 1;
       const isRewardReady = newCount >= 7;
 
-      // Update pass
       const { error: updateError } = await supabase
         .from("passes")
         .update({ stamp_count: newCount, is_reward_ready: isRewardReady })
@@ -105,6 +89,14 @@ const Dashboard = () => {
     );
   }
 
+  const tabs: { id: TabId; label: string; icon: React.ElementType }[] = [
+    { id: "customers", label: "Customers", icon: Users },
+    { id: "rewards", label: "Rewards", icon: Gift },
+    { id: "analytics", label: "Analytics", icon: BarChart3 },
+    { id: "manage", label: "Manage", icon: UserCog },
+    { id: "settings", label: "Settings", icon: Settings },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -120,70 +112,40 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button
-              variant={activeTab === "customers" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setActiveTab("customers")}
-            >
-              <Users className="w-4 h-4 mr-1" /> Customers
-            </Button>
-            <Button
-              variant={activeTab === "rewards" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setActiveTab("rewards")}
-            >
-              <Gift className="w-4 h-4 mr-1" /> Rewards
-            </Button>
             <span className="text-xs text-muted-foreground hidden sm:inline">{user?.email}</span>
             <Button variant="ghost" size="sm" onClick={signOut}>
               <LogOut className="w-4 h-4 mr-1" /> Sign Out
             </Button>
           </div>
         </div>
+        {/* Tab Navigation */}
+        <div className="container mx-auto px-4">
+          <div className="flex gap-1 overflow-x-auto pb-0">
+            {tabs.map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                onClick={() => setActiveTab(id)}
+                className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium transition-colors whitespace-nowrap border-b-2 ${
+                  activeTab === id
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
       </header>
 
       <div className="container mx-auto px-4 py-6 space-y-6">
-        {activeTab === "rewards" ? (
-          <RewardConfigPanel />
-        ) : (
+        {activeTab === "rewards" && <RewardConfigPanel />}
+        {activeTab === "analytics" && <AnalyticsPanel />}
+        {activeTab === "manage" && <CustomerManagementPanel />}
+        {activeTab === "settings" && <SystemSettingsPanel />}
+        {activeTab === "customers" && (
           <>
-            {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="surface-warm border-0">
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Total Customers</p>
-                      <p className="text-3xl font-serif text-foreground">{stats?.totalCustomers || 0}</p>
-                    </div>
-                    <Users className="w-8 h-8 text-primary" />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="surface-warm border-0">
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Total Visits</p>
-                      <p className="text-3xl font-serif text-foreground">{stats?.totalVisits || 0}</p>
-                    </div>
-                    <TrendingUp className="w-8 h-8 text-primary" />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="surface-warm border-0">
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Rewards Redeemed</p>
-                      <p className="text-3xl font-serif text-foreground">{stats?.totalRedemptions || 0}</p>
-                    </div>
-                    <Gift className="w-8 h-8 text-primary" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
             {/* Search */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
