@@ -24,22 +24,26 @@ const AdminCustomizationSection = () => {
   const [cardText, setCardText] = useState("#faf5f0");
 
   // Check if current user is admin via staff_users table
-  const { data: staffUser, isLoading } = useQuery({
+  const { data: staffUser, isLoading, isFetching } = useQuery({
     queryKey: ["staff-role", user?.email],
     queryFn: async () => {
       if (!user?.email) return null;
+      const email = user.email.toLowerCase();
+      console.log("Fetching staff role for:", email);
       const { data, error } = await supabase
         .from("staff_users")
         .select("role")
-        .eq("email", user.email)
+        .ilike("email", email)
         .maybeSingle();
+      console.log("Staff role response:", { data, error });
       if (error) throw error;
       return data;
     },
     enabled: !!user?.email,
   });
 
-  if (isLoading) return null;
+  // Show nothing while loading — don't flash "Access Restricted"
+  if (isLoading || isFetching) return null;
 
   if (!staffUser || staffUser.role !== "ADMIN") {
     return (
