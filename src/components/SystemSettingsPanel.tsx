@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Settings, Database, Users, Coffee, Gift, FileText } from "lucide-react";
+import AdminCustomizationSection from "@/components/AdminCustomizationSection";
 import { format } from "date-fns";
 
 const SystemSettingsPanel = () => {
