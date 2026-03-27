@@ -29,13 +29,11 @@ const AdminCustomizationSection = () => {
     queryFn: async () => {
       if (!user?.email) return null;
       const email = user.email.toLowerCase();
-      console.log("Fetching staff role for:", email);
       const { data, error } = await supabase
         .from("staff_users")
         .select("role")
         .ilike("email", email)
         .maybeSingle();
-      console.log("Staff role response:", { data, error });
       if (error) throw error;
       return data;
     },
