@@ -436,6 +436,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      ensure_admin_profile: { Args: never; Returns: undefined }
       generate_customer_code: { Args: never; Returns: string }
       get_user_restaurant_id: { Args: { _user_id: string }; Returns: string }
       get_user_role: {
