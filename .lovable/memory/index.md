@@ -1,4 +1,7 @@
-Bakebar loyalty card platform - warm bakery aesthetic with DM Serif Display + DM Sans fonts
+# Memory: index.md
+Updated: now
+
+Multi-tenant SaaS loyalty card platform - warm bakery aesthetic with DM Serif Display + DM Sans fonts
 
 ## Design System
 - Primary: warm brown (25 65% 42%)
@@ -8,21 +11,24 @@ Bakebar loyalty card platform - warm bakery aesthetic with DM Serif Display + DM
 - Custom tokens: stamp-filled, stamp-empty, reward-glow, surface-warm
 
 ## Architecture
-- /join = customer onboarding (public)
-- /auth = staff login/register (public, Supabase Auth with auto-confirm)
-- /dashboard = staff dashboard (protected route, requires auth)
-- 7 visits = 1 free item cycle
-- 5-digit unique customer codes
+- Multi-tenant SaaS with three roles: SUPER_ADMIN, RESTAURANT_OWNER, CUSTOMER
+- /join = customer onboarding (public, accepts ?r=restaurantId)
+- /dashboard = legacy staff dashboard (kept for backward compat)
+- /owner = restaurant owner dashboard (scoped by restaurant_id)
+- /admin = super admin dashboard (platform-wide)
+- /auth = login/signup with role-based redirect
+- BakeBar = pilot tenant (restaurant id: 00000000-0000-0000-0000-000000626162)
+- Super admin: harethkelany7@outlook.com
 
 ## Database Tables
+### Original (kept for backward compat)
 customers, passes, visits, rewards, reward_configs, staff_users, webhook_logs
 
-## Auth
-- Supabase Auth with auto-confirm emails
-- AuthProvider context in useAuth.tsx
-- ProtectedRoute component wraps /dashboard
-- No user profiles table — basic auth only
+### Multi-tenant additions
+profiles (id→auth.users, role, restaurant_id), restaurants, loyalty_programs, activity_logs
 
 ## Key Rules
-- Stamps never expire
-- Only one reward_config active at a time
+- Roles stored in profiles table, checked via get_user_role() security definer function
+- RLS on all new tables using security definer functions to avoid recursion
+- BakeBar data preserved as pilot tenant
+- 7 visits = 1 free item (configurable per restaurant via loyalty_programs)
