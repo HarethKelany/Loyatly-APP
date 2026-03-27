@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_logs: {
+        Row: {
+          created_at: string
+          id: string
+          is_resolved: boolean
+          message: string
+          restaurant_id: string | null
+          severity: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_resolved?: boolean
+          message: string
+          restaurant_id?: string | null
+          severity?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_resolved?: boolean
+          message?: string
+          restaurant_id?: string | null
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_logs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customers: {
         Row: {
           code: string
@@ -43,6 +78,53 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      loyalty_programs: {
+        Row: {
+          created_at: string
+          expiry_days: number | null
+          id: string
+          is_active: boolean
+          max_stamps_per_visit: number
+          program_name: string
+          restaurant_id: string
+          reward_description: string
+          stamps_required: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          expiry_days?: number | null
+          id?: string
+          is_active?: boolean
+          max_stamps_per_visit?: number
+          program_name?: string
+          restaurant_id: string
+          reward_description?: string
+          stamps_required?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          expiry_days?: number | null
+          id?: string
+          is_active?: boolean
+          max_stamps_per_visit?: number
+          program_name?: string
+          restaurant_id?: string
+          reward_description?: string
+          stamps_required?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loyalty_programs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       passes: {
         Row: {
@@ -81,6 +163,94 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: true
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          restaurant_id: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          restaurant_id?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          restaurant_id?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restaurants: {
+        Row: {
+          banner_url: string | null
+          card_accent_color: string | null
+          card_bg_color: string | null
+          card_text_color: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          logo_url: string | null
+          name: string
+          owner_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          banner_url?: string | null
+          card_accent_color?: string | null
+          card_bg_color?: string | null
+          card_text_color?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          name: string
+          owner_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          banner_url?: string | null
+          card_accent_color?: string | null
+          card_bg_color?: string | null
+          card_text_color?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          name?: string
+          owner_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurants_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -266,9 +436,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      ensure_admin_profile: { Args: never; Returns: undefined }
       generate_customer_code: { Args: never; Returns: string }
+      get_user_restaurant_id: { Args: { _user_id: string }; Returns: string }
+      get_user_role: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
     }
     Enums: {
+      app_role: "SUPER_ADMIN" | "RESTAURANT_OWNER" | "CUSTOMER"
       staff_role: "STAFF" | "ADMIN"
       visit_method: "AUTO" | "MANUAL"
     }
@@ -398,6 +575,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["SUPER_ADMIN", "RESTAURANT_OWNER", "CUSTOMER"],
       staff_role: ["STAFF", "ADMIN"],
       visit_method: ["AUTO", "MANUAL"],
     },
