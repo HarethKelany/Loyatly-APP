@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Coffee, ArrowRight, Users, Gift, Smartphone, Download } from "lucide-react";
+import { Coffee, ArrowRight, Gift, Smartphone, Download, Wallet, Store } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import LoyaltyCard from "@/components/LoyaltyCard";
 
@@ -26,17 +26,42 @@ const Index = () => {
             <p className="text-sm font-serif text-primary italic">
               Come for the coffee. Stay for the bakes.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link to="/join">
-                <Button size="lg">
-                  <Smartphone className="w-5 h-5 mr-2" /> Join Loyalty Program
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+            {/* Dual CTA Cards */}
+            <div className="grid sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
+              {/* Customer Card */}
+              <Link to="/join" className="block group">
+                <Card className="h-full border-2 border-primary/20 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                  <CardContent className="p-6 text-center space-y-4">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                      <Wallet className="w-7 h-7 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-serif text-foreground">Get Your Loyalty Card</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Scan, collect stamps, and earn rewards at your favorite restaurants.
+                    </p>
+                    <Button className="w-full">
+                      Get Started <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </CardContent>
+                </Card>
               </Link>
-              <Link to="/dashboard">
-                <Button size="lg" variant="outline">
-                  <Users className="w-5 h-5 mr-2" /> Staff Dashboard
-                </Button>
+
+              {/* Restaurant Owner Card */}
+              <Link to="/register/restaurant" className="block group">
+                <Card className="h-full border-2 border-secondary hover:border-accent/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                  <CardContent className="p-6 text-center space-y-4">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-secondary group-hover:bg-accent/10 transition-colors">
+                      <Store className="w-7 h-7 text-secondary-foreground" />
+                    </div>
+                    <h3 className="text-xl font-serif text-foreground">Register Your Restaurant</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Set up your loyalty program, customize your card, and track your customers.
+                    </p>
+                    <Button variant="outline" className="w-full">
+                      Register Now <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </CardContent>
+                </Card>
               </Link>
             </div>
           </div>
