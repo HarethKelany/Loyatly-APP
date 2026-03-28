@@ -9,10 +9,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { Gift, Save, Plus, Trash2, Award } from "lucide-react";
 
+type RewardTypeEnum = "free_item" | "percentage_discount" | "fixed_discount" | "custom";
+type ResetPolicyEnum = "never" | "after_redemption" | "after_inactivity";
+
 type RewardTier = {
   id?: string;
   visits_required: number;
-  reward_type: string;
+  reward_type: RewardTypeEnum;
   reward_name: string;
   reward_value: number | null;
   sort_order: number;
