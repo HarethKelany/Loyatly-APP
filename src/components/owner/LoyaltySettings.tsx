@@ -77,7 +77,7 @@ const LoyaltySettings = ({ restaurantId }: { restaurantId: string }) => {
       setRewardDescription(program.reward_description);
       setExpiryDays(program.expiry_days ? String(program.expiry_days) : "");
       setMaxStampsPerVisit(String(program.max_stamps_per_visit));
-      setResetPolicy((program as any).visit_reset_policy || "never");
+      setResetPolicy(((program as any).visit_reset_policy as ResetPolicyEnum) || "never");
       setInactivityDays((program as any).inactivity_days ? String((program as any).inactivity_days) : "");
       setInitialized(true);
     }
