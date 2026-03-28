@@ -65,7 +65,7 @@ const LoyaltySettings = ({ restaurantId }: { restaurantId: string }) => {
   const [rewardDescription, setRewardDescription] = useState("");
   const [expiryDays, setExpiryDays] = useState("");
   const [maxStampsPerVisit, setMaxStampsPerVisit] = useState("1");
-  const [resetPolicy, setResetPolicy] = useState("never");
+  const [resetPolicy, setResetPolicy] = useState<ResetPolicyEnum>("never");
   const [inactivityDays, setInactivityDays] = useState("");
   const [tiers, setTiers] = useState<RewardTier[]>([]);
   const [initialized, setInitialized] = useState(false);
