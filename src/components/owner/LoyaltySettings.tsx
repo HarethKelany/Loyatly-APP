@@ -237,7 +237,7 @@ const LoyaltySettings = ({ restaurantId }: { restaurantId: string }) => {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label>Reset Policy</Label>
-            <Select value={resetPolicy} onValueChange={setResetPolicy}>
+            <Select value={resetPolicy} onValueChange={(v) => setResetPolicy(v as ResetPolicyEnum)}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
