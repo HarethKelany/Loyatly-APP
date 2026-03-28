@@ -13,7 +13,7 @@ import OwnerDashboard from "./pages/OwnerDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
-import RegisterRestaurant from "./pages/RegisterRestaurant";
+
 
 const queryClient = new QueryClient();
 
@@ -52,7 +52,7 @@ const App = () => (
                 </RoleRoute>
               }
             />
-            <Route path="/register/restaurant" element={<RegisterRestaurant />} />
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

@@ -45,7 +45,7 @@ const Index = () => {
               </Link>
 
               {/* Owner */}
-              <Link to="/register/restaurant" className="block group">
+              <Link to="/auth" className="block group">
                 <Card className="h-full border-2 border-secondary hover:border-accent/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                   <CardContent className="p-6 text-center space-y-4">
                     <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-secondary group-hover:bg-accent/10 transition-colors">
