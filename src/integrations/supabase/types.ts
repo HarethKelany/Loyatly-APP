@@ -84,6 +84,7 @@ export type Database = {
           created_at: string
           expiry_days: number | null
           id: string
+          inactivity_days: number | null
           is_active: boolean
           max_stamps_per_visit: number
           program_name: string
@@ -91,11 +92,13 @@ export type Database = {
           reward_description: string
           stamps_required: number
           updated_at: string
+          visit_reset_policy: Database["public"]["Enums"]["visit_reset_policy"]
         }
         Insert: {
           created_at?: string
           expiry_days?: number | null
           id?: string
+          inactivity_days?: number | null
           is_active?: boolean
           max_stamps_per_visit?: number
           program_name?: string
@@ -103,11 +106,13 @@ export type Database = {
           reward_description?: string
           stamps_required?: number
           updated_at?: string
+          visit_reset_policy?: Database["public"]["Enums"]["visit_reset_policy"]
         }
         Update: {
           created_at?: string
           expiry_days?: number | null
           id?: string
+          inactivity_days?: number | null
           is_active?: boolean
           max_stamps_per_visit?: number
           program_name?: string
@@ -115,6 +120,7 @@ export type Database = {
           reward_description?: string
           stamps_required?: number
           updated_at?: string
+          visit_reset_policy?: Database["public"]["Enums"]["visit_reset_policy"]
         }
         Relationships: [
           {
@@ -291,6 +297,50 @@ export type Database = {
         }
         Relationships: []
       }
+      reward_tiers: {
+        Row: {
+          created_at: string
+          id: string
+          loyalty_program_id: string
+          reward_name: string
+          reward_type: Database["public"]["Enums"]["reward_type"]
+          reward_value: number | null
+          sort_order: number
+          updated_at: string
+          visits_required: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          loyalty_program_id: string
+          reward_name?: string
+          reward_type?: Database["public"]["Enums"]["reward_type"]
+          reward_value?: number | null
+          sort_order?: number
+          updated_at?: string
+          visits_required?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          loyalty_program_id?: string
+          reward_name?: string
+          reward_type?: Database["public"]["Enums"]["reward_type"]
+          reward_value?: number | null
+          sort_order?: number
+          updated_at?: string
+          visits_required?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reward_tiers_loyalty_program_id_fkey"
+            columns: ["loyalty_program_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rewards: {
         Row: {
           customer_id: string
@@ -446,8 +496,14 @@ export type Database = {
     }
     Enums: {
       app_role: "SUPER_ADMIN" | "RESTAURANT_OWNER" | "CUSTOMER"
+      reward_type:
+        | "free_item"
+        | "percentage_discount"
+        | "fixed_discount"
+        | "custom"
       staff_role: "STAFF" | "ADMIN"
       visit_method: "AUTO" | "MANUAL"
+      visit_reset_policy: "never" | "after_redemption" | "after_inactivity"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -576,8 +632,15 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["SUPER_ADMIN", "RESTAURANT_OWNER", "CUSTOMER"],
+      reward_type: [
+        "free_item",
+        "percentage_discount",
+        "fixed_discount",
+        "custom",
+      ],
       staff_role: ["STAFF", "ADMIN"],
       visit_method: ["AUTO", "MANUAL"],
+      visit_reset_policy: ["never", "after_redemption", "after_inactivity"],
     },
   },
 } as const
