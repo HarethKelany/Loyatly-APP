@@ -14,6 +14,159 @@ export type Database = {
   }
   public: {
     Tables: {
+      customer_cards: {
+        Row: {
+          id: string
+          customer_id: string
+          program_id: string
+          restaurant_id: string
+          stamp_count: number
+          is_reward_ready: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          customer_id: string
+          program_id: string
+          restaurant_id: string
+          stamp_count?: number
+          is_reward_ready?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          customer_id?: string
+          program_id?: string
+          restaurant_id?: string
+          stamp_count?: number
+          is_reward_ready?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_cards_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_cards_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_cards_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customer_visits: {
+        Row: {
+          id: string
+          card_id: string
+          customer_id: string
+          restaurant_id: string
+          stamps_earned: number
+          visited_at: string
+        }
+        Insert: {
+          id?: string
+          card_id: string
+          customer_id: string
+          restaurant_id: string
+          stamps_earned?: number
+          visited_at?: string
+        }
+        Update: {
+          id?: string
+          card_id?: string
+          customer_id?: string
+          restaurant_id?: string
+          stamps_earned?: number
+          visited_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_visits_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "customer_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_visits_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_visits_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customer_rewards: {
+        Row: {
+          id: string
+          card_id: string
+          customer_id: string
+          restaurant_id: string
+          reward_description: string
+          redeemed_at: string
+        }
+        Insert: {
+          id?: string
+          card_id: string
+          customer_id: string
+          restaurant_id: string
+          reward_description: string
+          redeemed_at?: string
+        }
+        Update: {
+          id?: string
+          card_id?: string
+          customer_id?: string
+          restaurant_id?: string
+          reward_description?: string
+          redeemed_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_rewards_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "customer_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_rewards_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_rewards_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       activity_logs: {
         Row: {
           created_at: string

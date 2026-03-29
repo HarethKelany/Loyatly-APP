@@ -21,7 +21,7 @@ const RoleRoute = ({ children, allowedRoles }: RoleRouteProps) => {
   }
 
   if (!session) {
-    return <Navigate to="/auth" replace />;
+    return <Navigate to="/" replace />;
   }
 
   if (!profile || !allowedRoles.includes(profile.role)) {
