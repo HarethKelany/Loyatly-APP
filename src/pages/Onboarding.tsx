@@ -25,7 +25,6 @@ import {
   MapPin,
   Phone,
   Image as ImageIcon,
-  Truck,
 } from "lucide-react";
 
 /* ─── Customer tab (original flow) ─── */
