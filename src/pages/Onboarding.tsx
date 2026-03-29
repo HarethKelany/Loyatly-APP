@@ -210,7 +210,7 @@ const SectionHeading = ({
 const RestaurantTab = () => {
   const [form, setForm] = useState({
     restaurantName: "",
-    cuisineType: "",
+    
     description: "",
     city: "",
     district: "",
@@ -222,7 +222,7 @@ const RestaurantTab = () => {
     email: "",
     countryCode: "+20",
     phone: "",
-    whatsapp: "",
+    
     website: "",
     instagram: "",
   });
@@ -335,24 +335,6 @@ const RestaurantTab = () => {
                 onChange={set("restaurantName")}
                 placeholder="e.g. Cairo Grill House"
               />
-            </div>
-            <div className="space-y-2">
-              <Label>Cuisine type</Label>
-              <Select
-                value={form.cuisineType}
-                onValueChange={setSelect("cuisineType")}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select cuisine" />
-                </SelectTrigger>
-                <SelectContent>
-                  {CUISINE_TYPES.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {c}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
           </div>
           <div className="space-y-2">
@@ -501,15 +483,6 @@ const RestaurantTab = () => {
                   placeholder="1234567890"
                 />
               </div>
-            </div>
-            <div className="space-y-2">
-              <Label>WhatsApp number</Label>
-              <Input
-                type="tel"
-                value={form.whatsapp}
-                onChange={set("whatsapp")}
-                placeholder="WhatsApp number"
-              />
             </div>
             <div className="space-y-2">
               <Label>Website URL</Label>
