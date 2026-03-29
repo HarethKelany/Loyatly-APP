@@ -1,31 +1,20 @@
 import { Coffee, Gift } from "lucide-react";
 
-interface StampProgressProps {
-  stampCount: number;
-  total?: number;
-}
+interface StampProgressProps { stampCount: number; total?: number; }
 
-const StampProgress = ({ stampCount, total = 7 }: StampProgressProps) => {
-  return (
-    <div className="flex items-center gap-2">
-      {Array.from({ length: total }).map((_, i) => (
-        <div
-          key={i}
-          className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-            i < stampCount
-              ? 'bg-primary text-primary-foreground shadow-sm'
-              : 'bg-muted text-muted-foreground border-2 border-dashed border-muted-foreground/30'
-          }`}
-        >
-          {i < total - 1 ? (
-            i < stampCount ? <Coffee className="w-4 h-4" /> : <span className="text-xs">{i + 1}</span>
-          ) : (
-            <Gift className={`w-4 h-4 ${i < stampCount ? '' : ''}`} />
-          )}
-        </div>
-      ))}
-    </div>
-  );
-};
+const StampProgress = ({ stampCount, total = 7 }: StampProgressProps) => (
+  <div className="flex items-center gap-1.5">
+    {Array.from({ length: total }).map((_, i) => (
+      <div key={i} className="w-5 h-5 rounded-full flex items-center justify-center transition-all"
+        style={i < stampCount
+          ? { background: "hsl(var(--coral))", boxShadow: "0 0 6px hsl(var(--coral) / 0.4)" }
+          : { background: "hsl(var(--border))", border: "1.5px dashed hsl(var(--coral) / 0.3)" }}>
+        {i === total - 1
+          ? <Gift className="w-2.5 h-2.5" style={{ color: i < stampCount ? "white" : "hsl(var(--muted-foreground))" }} />
+          : i < stampCount && <Coffee className="w-2.5 h-2.5 text-white" />}
+      </div>
+    ))}
+  </div>
+);
 
 export default StampProgress;

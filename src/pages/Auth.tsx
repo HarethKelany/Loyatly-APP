@@ -2,10 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Coffee, ArrowRight, Mail, Lock } from "lucide-react";
 
@@ -17,26 +15,17 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Redirect based on role after login
   useEffect(() => {
     if (session && !profileLoading && role) {
-      if (role === "SUPER_ADMIN") {
-        navigate("/admin");
-      } else if (role === "RESTAURANT_OWNER") {
-        navigate("/owner");
-      } else {
-        navigate("/dashboard");
-      }
+      if (role === "SUPER_ADMIN") navigate("/admin");
+      else if (role === "RESTAURANT_OWNER") navigate("/owner");
+      else navigate("/dashboard");
     }
   }, [session, role, profileLoading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      toast.error("Please fill in all fields");
-      return;
-    }
-
+    if (!email || !password) { toast.error("Please fill in all fields"); return; }
     setLoading(true);
     try {
       if (isLogin) {
@@ -44,68 +33,54 @@ const Auth = () => {
         if (error) throw error;
         toast.success("Welcome back!");
       } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { emailRedirectTo: window.location.origin },
-        });
+        const { error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin } });
         if (error) throw error;
-        toast.success("Account created! You're now signed in.");
+        toast.success("Account created!");
       }
-    } catch (error: any) {
-      toast.error(error.message || "Authentication failed");
-    } finally {
-      setLoading(false);
-    }
+    } catch (error: any) { toast.error(error.message || "Authentication failed"); }
+    finally { setLoading(false); }
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary text-primary-foreground mb-4">
-            <Coffee className="w-8 h-8" />
-          </div>
-          <h1 className="text-4xl font-serif text-foreground">Welcome</h1>
-          <p className="text-muted-foreground">
-            {isLogin ? "Sign in to your account" : "Create a new account"}
-          </p>
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="hero-teal px-6 pt-16 pb-14 text-center">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white mb-5 shadow-sm">
+          <Coffee className="w-8 h-8" style={{ color: "hsl(var(--teal))" }} />
         </div>
-
-        <Card className="border-0 shadow-lg">
-          <CardHeader className="pb-2">
-            <h2 className="text-xl font-serif text-foreground">
-              {isLogin ? "Sign In" : "Sign Up"}
-            </h2>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" className="pl-10" />
-                </div>
+        <h1 className="text-3xl font-extrabold text-white mb-1">{isLogin ? "Welcome Back" : "Create Account"}</h1>
+        <p className="text-sm text-white/80">{isLogin ? "Sign in to your account" : "Join the Bakebar family"}</p>
+      </div>
+      <div className="px-5 -mt-7 relative z-10 flex-1">
+        <div className="bg-card rounded-3xl border border-border shadow-xl p-6">
+          <h2 className="text-lg font-extrabold text-foreground mb-5">{isLogin ? "Sign In" : "Sign Up"}</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Email address</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" className="pl-10 h-12 rounded-xl bg-muted border-0 text-sm" />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="pl-10" />
-                </div>
-              </div>
-              <Button type="submit" className="w-full" size="lg" disabled={loading}>
-                {loading ? "Loading..." : isLogin ? "Sign In" : "Create Account"}
-                {!loading && <ArrowRight className="ml-2 w-4 h-4" />}
-              </Button>
-            </form>
-            <div className="mt-6 text-center">
-              <button type="button" onClick={() => setIsLogin(!isLogin)} className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
-              </button>
             </div>
-          </CardContent>
-        </Card>
+            <div className="space-y-1.5">
+              <Label htmlFor="password" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Password</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="pl-10 h-12 rounded-xl bg-muted border-0 text-sm" />
+              </div>
+            </div>
+            <button type="submit" disabled={loading} className="w-full h-12 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-60 mt-2" style={{ background: "hsl(var(--teal))" }}>
+              {loading ? "Loading..." : isLogin ? "Sign In" : "Create Account"}
+              {!loading && <ArrowRight className="w-4 h-4" />}
+            </button>
+          </form>
+          <div className="mt-5 text-center">
+            <button type="button" onClick={() => setIsLogin(!isLogin)} className="text-sm text-muted-foreground">
+              {isLogin
+                ? <span>Don't have an account? <span className="font-semibold" style={{ color: "hsl(var(--teal))" }}>Sign up</span></span>
+                : <span>Already have an account? <span className="font-semibold" style={{ color: "hsl(var(--teal))" }}>Sign in</span></span>}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
