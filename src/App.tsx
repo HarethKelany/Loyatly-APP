@@ -11,9 +11,9 @@ import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import OwnerDashboard from "./pages/OwnerDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
-import RegisterRestaurant from "./pages/RegisterRestaurant";
-import CustomerDashboard from "./pages/CustomerDashboard";
+
 
 const queryClient = new QueryClient();
 
@@ -27,6 +27,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/join" element={<Onboarding />} />
+            <Route path="/auth" element={<Auth />} />
             <Route
               path="/dashboard"
               element={
@@ -51,15 +52,7 @@ const App = () => (
                 </RoleRoute>
               }
             />
-            <Route
-              path="/customer"
-              element={
-                <RoleRoute allowedRoles={["CUSTOMER"]}>
-                  <CustomerDashboard />
-                </RoleRoute>
-              }
-            />
-            <Route path="/register/restaurant" element={<RegisterRestaurant />} />
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
