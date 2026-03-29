@@ -157,15 +157,6 @@ const CustomerTab = () => {
 
 /* ─── Restaurant registration tab ─── */
 
-const CUISINE_TYPES = [
-  "Egyptian",
-  "Italian",
-  "Asian Fusion",
-  "Seafood",
-  "Fast Food",
-  "Café / Bakery",
-  "Other",
-];
 const CITIES = [
   "Cairo",
   "Alexandria",
