@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -632,7 +631,8 @@ const DriversTab = () => (
 /* ─── Main page ─── */
 const Onboarding = () => {
   const [searchParams] = useSearchParams();
-  const defaultTab = searchParams.get("tab") === "restaurant" ? "restaurant" : "customer";
+  const tab = searchParams.get("tab");
+  const defaultTab = tab === "restaurant" ? "restaurant" : tab === "driver" ? "driver" : "customer";
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center p-4 pt-8 md:pt-12">
@@ -648,25 +648,15 @@ const Onboarding = () => {
           </p>
         </div>
 
-        <Tabs defaultValue={defaultTab} className="w-full">
-          <TabsList className="w-full grid grid-cols-3">
-            <TabsTrigger value="customer">For customers</TabsTrigger>
-            <TabsTrigger value="restaurant">For restaurants</TabsTrigger>
-            <TabsTrigger value="driver">For drivers</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="customer" className="mt-6">
-            <CustomerTab />
-          </TabsContent>
-
-          <TabsContent value="restaurant" className="mt-6">
+        <div className="w-full mt-6">
+          {defaultTab === "restaurant" ? (
             <RestaurantTab />
-          </TabsContent>
-
-          <TabsContent value="driver" className="mt-6">
+          ) : defaultTab === "driver" ? (
             <DriversTab />
-          </TabsContent>
-        </Tabs>
+          ) : (
+            <CustomerTab />
+          )}
+        </div>
       </div>
     </div>
   );

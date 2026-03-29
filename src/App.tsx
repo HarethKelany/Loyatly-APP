@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import OwnerDashboard from "./pages/OwnerDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import Auth from "./pages/Auth";
+import CustomerDashboard from "./pages/CustomerDashboard";
 import NotFound from "./pages/NotFound";
 
 
@@ -52,7 +53,14 @@ const App = () => (
                 </RoleRoute>
               }
             />
-            
+            <Route
+              path="/customer"
+              element={
+                <RoleRoute allowedRoles={["CUSTOMER"]}>
+                  <CustomerDashboard />
+                </RoleRoute>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
