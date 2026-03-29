@@ -615,18 +615,6 @@ const RestaurantTab = () => {
   );
 };
 
-/* ─── Drivers placeholder ─── */
-const DriversTab = () => (
-  <div className="max-w-md mx-auto text-center py-12 space-y-4">
-    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-muted">
-      <Truck className="w-7 h-7 text-muted-foreground" />
-    </div>
-    <h2 className="text-xl font-serif text-foreground">Driver sign-up coming soon</h2>
-    <p className="text-muted-foreground">
-      We're building a driver network. Check back shortly!
-    </p>
-  </div>
-);
 
 /* ─── Main page ─── */
 const Onboarding = () => {
@@ -648,10 +636,9 @@ const Onboarding = () => {
         </div>
 
         <Tabs defaultValue={defaultTab} className="w-full">
-          <TabsList className="w-full grid grid-cols-3">
+          <TabsList className="w-full grid grid-cols-2">
             <TabsTrigger value="customer">For customers</TabsTrigger>
             <TabsTrigger value="restaurant">For restaurants</TabsTrigger>
-            <TabsTrigger value="driver">For drivers</TabsTrigger>
           </TabsList>
 
           <TabsContent value="customer" className="mt-6">
@@ -662,9 +649,6 @@ const Onboarding = () => {
             <RestaurantTab />
           </TabsContent>
 
-          <TabsContent value="driver" className="mt-6">
-            <DriversTab />
-          </TabsContent>
         </Tabs>
       </div>
     </div>
